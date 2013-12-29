@@ -15,6 +15,7 @@ febootstrap \
     -i iputils \
     -i tar \
     -i which \
+    -i http://mirror.pnl.gov/epel/6/i386/epel-release-6-8.noarch.rpm \
     centos65 \
     ${tmpdir} \
     http://mirrors.mit.edu/centos/6.5/os/x86_64/
