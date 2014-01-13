@@ -5,6 +5,8 @@ set -e
 ## requires running as root because filesystem package won't install otherwise,
 ## giving a cryptic error about /proc, cpio, and utime.  As a result, /tmp
 ## doesn't exist.
+[ $( id -u ) -eq 0 ] || { echo "must be root"; exit 1; }
+
 tmpdir=$( mktemp -d )
 trap "echo removing ${tmpdir}; rm -rf ${tmpdir}" EXIT
 
@@ -21,6 +23,10 @@ febootstrap \
     http://mirrors.mit.edu/centos/6.5/os/x86_64/
 
 febootstrap-run ${tmpdir} -- sh -c 'echo "NETWORKING=yes" > /etc/sysconfig/network'
+
+## set timezone of container to UTC
+febootstrap-run ${tmpdir} -- ln -f /usr/share/zoneinfo/Etc/UTC /etc/localtime
+
 febootstrap-run ${tmpdir} -- yum clean all
 
 ## xz gives the smallest size by far, compared to bzip2 and gzip, by like 50%!
